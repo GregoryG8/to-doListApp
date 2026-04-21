@@ -89,7 +89,11 @@
       >
         <ion-card-content>
           <div class="task-top">
-            <ion-icon name="checkmark-circle" class="done-icon"></ion-icon>
+            <ion-checkbox
+              class="checkbox-card"
+              [checked]="task.completed"
+              (ionChange)="toggleTask(task)"
+            ></ion-checkbox>
             <div class="task-main">
               <h3>{{ task.title }}</h3>
               <div class="task-meta">
