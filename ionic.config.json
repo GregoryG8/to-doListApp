@@ -1,5 +1,5 @@
 {
-  "name": "temp-todo",
+  "name": "todo",
   "integrations": {
     "capacitor": {},
     "cordova": {}
