@@ -102,23 +102,25 @@
                 >
               </div>
             </div>
-            <ion-button
-              fill="clear"
-              class="action-btn"
-              color="medium"
-              (click)="editTask(task)"
-            >
-              <ion-icon slot="icon-only" name="create"></ion-icon>
-            </ion-button>
+            <div>
+              <ion-button
+                fill="clear"
+                class="action-btn"
+                color="medium"
+                (click)="editTask(task)"
+              >
+                <ion-icon slot="icon-only" name="create"></ion-icon>
+              </ion-button>
 
-            <ion-button
-              fill="clear"
-              class="action-btn"
-              color="danger"
-              (click)="removeTask(task.id)"
-            >
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-button>
+              <ion-button
+                fill="clear"
+                class="action-btn"
+                color="danger"
+                (click)="removeTask(task.id)"
+              >
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-button>
+            </div>
           </div>
         </ion-card-content>
       </ion-card>
