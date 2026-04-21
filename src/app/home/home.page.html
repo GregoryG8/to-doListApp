@@ -184,7 +184,7 @@
       Cancelar edición
     </ion-button>
 
-    <div class="category-admin">
+    <div class="category-admin" *ngIf="!editingTaskId">
       <h4>Categorías</h4>
 
       <ion-item fill="outline" class="form-item">
@@ -197,7 +197,6 @@
 
       <ion-button
         expand="block"
-        fill="outline"
         (click)="addCategory()"
         [disabled]="!newCategoryName.trim()"
       >

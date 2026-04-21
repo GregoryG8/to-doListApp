@@ -73,10 +73,6 @@
   padding: 14px 12px;
 }
 
-.checkbox-card {
-
-}
-
 .task-top {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -160,7 +156,7 @@ ion-badge {
 }
 
 .completed-block {
-  margin-top: 26px;
+  margin-top: 26px;;
 }
 
 .section-label {
@@ -217,7 +213,14 @@ ion-badge {
 }
 
 .form-item {
+  --background: transparent;
+  --border-radius: 14px;
   margin-bottom: 10px;
+  color: #1f2635;
+}
+
+.form-item ion-label, ion-select, ion-input {
+  color: #1f2635;
 }
 
 .category-admin {
@@ -229,8 +232,19 @@ ion-badge {
   color: #4a5264;
 }
 
-.category-list {
+.category-list{
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.category-list ion-item, .list-md, .list-ios {
+  --background: #f4f5fb;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  background-color: #f4f5fb;
+  color: #1f2635;
 }
 
 .floating-add {
@@ -250,3 +264,4 @@ ion-badge {
   box-shadow: 0 10px 24px rgba(51, 120, 255, 0.45);
   z-index: 22;
 }
+
