@@ -29,7 +29,7 @@
     <section class="task-section">
       <ion-card
         class="task-card"
-        *ngFor="let task of activeTasks; trackBy: trackById"
+        *ngFor="let task of visibleActiveTasks; trackBy: trackById"
       >
         <ion-card-content>
           <div class="task-top">
@@ -78,6 +78,15 @@
           >
         </ion-card-content>
       </ion-card>
+
+      <ion-button
+        *ngIf="hasMoreActiveTasks"
+        fill="clear"
+        class="load-more-btn"
+        (click)="loadMoreActiveTasks()"
+      >
+        Cargar más tareas activas
+      </ion-button>
     </section>
 
     <section class="completed-block">
@@ -85,7 +94,7 @@
 
       <ion-card
         class="task-card completed"
-        *ngFor="let task of completedTasks; trackBy: trackById"
+        *ngFor="let task of visibleCompletedTasks; trackBy: trackById"
       >
         <ion-card-content>
           <div class="task-top">
@@ -128,6 +137,15 @@
       <ion-text color="medium" *ngIf="completedTasks.length === 0">
         Todavía no hay tareas completadas.
       </ion-text>
+
+      <ion-button
+        *ngIf="hasMoreCompletedTasks"
+        fill="clear"
+        class="load-more-btn"
+        (click)="loadMoreCompletedTasks()"
+      >
+        Cargar más tareas completadas
+      </ion-button>
     </section>
   </div>
 

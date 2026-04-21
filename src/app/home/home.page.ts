@@ -1,6 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   IonBadge,
   IonButton,
@@ -30,6 +37,7 @@ import { TaskService } from '../services/task.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     FormsModule,
@@ -50,6 +58,9 @@ import { TaskService } from '../services/task.service';
   ],
 })
 export class HomePage implements OnInit {
+  private static readonly PAGE_SIZE = 10;
+
+  private readonly destroyRef = inject(DestroyRef);
   private readonly taskService = inject(TaskService);
   private readonly categoryService = inject(CategoryService);
 
@@ -63,6 +74,9 @@ export class HomePage implements OnInit {
   selectedCategoryFilter = 'all';
   composerOpen = false;
 
+  visibleActiveCount = HomePage.PAGE_SIZE;
+  visibleCompletedCount = HomePage.PAGE_SIZE;
+
   editingTaskId: string | null = null;
   editingCategoryId: string | null = null;
   editingCategoryName = '';
@@ -72,18 +86,22 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.categoryService.categories$.subscribe((categories) => {
-      this.categories = categories;
-      if (!this.newTaskCategoryId && categories.length > 0) {
-        this.newTaskCategoryId = categories[0].id;
-      }
-      this.applyFilter();
-    });
+    this.categoryService.categories$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((categories) => {
+        this.categories = categories;
+        if (!this.newTaskCategoryId && categories.length > 0) {
+          this.newTaskCategoryId = categories[0].id;
+        }
+        this.applyFilter();
+      });
 
-    this.taskService.tasks$.subscribe((tasks) => {
-      this.tasks = tasks;
-      this.applyFilter();
-    });
+    this.taskService.tasks$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((tasks) => {
+        this.tasks = tasks;
+        this.applyFilter();
+      });
   }
 
   saveTask(): void {
@@ -178,6 +196,14 @@ export class HomePage implements OnInit {
     this.applyFilter();
   }
 
+  loadMoreActiveTasks(): void {
+    this.visibleActiveCount += HomePage.PAGE_SIZE;
+  }
+
+  loadMoreCompletedTasks(): void {
+    this.visibleCompletedCount += HomePage.PAGE_SIZE;
+  }
+
   toggleComposer(): void {
     this.composerOpen = !this.composerOpen;
 
@@ -202,15 +228,34 @@ export class HomePage implements OnInit {
   }
 
   getCategoryName(categoryId: string): string {
-    return this.categories.find((category) => category.id === categoryId)?.name ?? 'Sin categoría';
+    return (
+      this.categories.find((category) => category.id === categoryId)?.name ??
+      'Sin categoría'
+    );
   }
 
   get activeTasks(): Task[] {
     return this.filteredTasks.filter((task) => !task.completed);
   }
 
+  get visibleActiveTasks(): Task[] {
+    return this.activeTasks.slice(0, this.visibleActiveCount);
+  }
+
+  get hasMoreActiveTasks(): boolean {
+    return this.activeTasks.length > this.visibleActiveCount;
+  }
+
   get completedTasks(): Task[] {
     return this.filteredTasks.filter((task) => task.completed);
+  }
+
+  get visibleCompletedTasks(): Task[] {
+    return this.completedTasks.slice(0, this.visibleCompletedCount);
+  }
+
+  get hasMoreCompletedTasks(): boolean {
+    return this.completedTasks.length > this.visibleCompletedCount;
   }
 
   get todayLabel(): string {
@@ -237,10 +282,14 @@ export class HomePage implements OnInit {
   private applyFilter(): void {
     if (this.selectedCategoryFilter === 'all') {
       this.filteredTasks = [...this.tasks];
+      this.resetVisibleCounters();
       return;
     }
 
-    this.filteredTasks = this.tasks.filter((task) => task.categoryId === this.selectedCategoryFilter);
+    this.filteredTasks = this.tasks.filter(
+      (task) => task.categoryId === this.selectedCategoryFilter,
+    );
+    this.resetVisibleCounters();
   }
 
   private resetTaskComposer(): void {
@@ -248,5 +297,10 @@ export class HomePage implements OnInit {
     this.newTaskTitle = '';
     this.newTaskCategoryId = this.categories[0]?.id ?? '';
     this.composerOpen = false;
+  }
+
+  private resetVisibleCounters(): void {
+    this.visibleActiveCount = HomePage.PAGE_SIZE;
+    this.visibleCompletedCount = HomePage.PAGE_SIZE;
   }
 }

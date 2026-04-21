@@ -35,13 +35,25 @@ Gestionar tareas y categorías en una sola pantalla de Home, con persistencia lo
 - Filtro por categoría
 - Separación visual de tareas activas y completadas
 - Persistencia local con `localStorage`
+- Optimización para listas grandes
+	- Render incremental con botón "Cargar más" en activas/completadas
+	- `trackBy` en listas para reducir re-renderizados
+	- `ChangeDetectionStrategy.OnPush` en Home
+	- Suscripciones seguras con `takeUntilDestroyed`
 
 ### Funcionalidades no implementadas
 
 - Firebase
 - Remote Config / feature flags
 - SQLite
-- Virtual scroll o paginación para listas grandes
+
+## Rendimiento (estado actual)
+
+- El componente Home usa estrategia `OnPush`.
+- Las listas de tareas activas y completadas se muestran de forma incremental (paginación local por bloques).
+- Se mantiene `trackBy` por `id` en ambos `*ngFor` principales.
+- Las suscripciones de estado usan `takeUntilDestroyed` para evitar fugas de memoria.
+- El flujo fue validado con `npm run build` exitoso.
 
 ## Arquitectura actual
 
