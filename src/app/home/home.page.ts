@@ -6,27 +6,19 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
   IonCheckbox,
-  IonCol,
   IonContent,
-  IonGrid,
-  IonHeader,
   IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonRow,
   IonSelect,
   IonSelectOption,
   IonText,
-  IonTitle,
-  IonToolbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add, close, create, trash } from 'ionicons/icons';
+import { add, checkmarkCircle, close, create, trash } from 'ionicons/icons';
 
 import { Category } from '../models/category.model';
 import { Task } from '../models/task.model';
@@ -45,24 +37,16 @@ import { TaskService } from '../services/task.service';
     IonButton,
     IonCard,
     IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
     IonCheckbox,
-    IonCol,
     IonContent,
-    IonGrid,
-    IonHeader,
     IonIcon,
     IonInput,
     IonItem,
     IonLabel,
     IonList,
-    IonRow,
     IonSelect,
     IonSelectOption,
     IonText,
-    IonTitle,
-    IonToolbar,
   ],
 })
 export class HomePage implements OnInit {
@@ -77,12 +61,14 @@ export class HomePage implements OnInit {
   newTaskCategoryId = '';
   newCategoryName = '';
   selectedCategoryFilter = 'all';
+  composerOpen = false;
 
+  editingTaskId: string | null = null;
   editingCategoryId: string | null = null;
   editingCategoryName = '';
 
   constructor() {
-    addIcons({ add, close, create, trash });
+    addIcons({ add, checkmarkCircle, close, create, trash });
   }
 
   ngOnInit(): void {
@@ -100,18 +86,24 @@ export class HomePage implements OnInit {
     });
   }
 
-  addTask(): void {
+  saveTask(): void {
     const title = this.newTaskTitle.trim();
     if (!title || !this.newTaskCategoryId) {
       return;
     }
 
-    this.taskService.addTask({
+    const payload = {
       title,
       categoryId: this.newTaskCategoryId,
-    });
+    };
 
-    this.newTaskTitle = '';
+    if (this.editingTaskId) {
+      this.taskService.updateTask(this.editingTaskId, payload);
+    } else {
+      this.taskService.addTask(payload);
+    }
+
+    this.resetTaskComposer();
   }
 
   toggleTask(task: Task): void {
@@ -120,6 +112,17 @@ export class HomePage implements OnInit {
 
   removeTask(taskId: string): void {
     this.taskService.removeTask(taskId);
+
+    if (this.editingTaskId === taskId) {
+      this.resetTaskComposer();
+    }
+  }
+
+  editTask(task: Task): void {
+    this.editingTaskId = task.id;
+    this.newTaskTitle = task.title;
+    this.newTaskCategoryId = task.categoryId;
+    this.composerOpen = true;
   }
 
   addCategory(): void {
@@ -170,12 +173,65 @@ export class HomePage implements OnInit {
     this.applyFilter();
   }
 
+  setCategoryFilter(filter: string): void {
+    this.selectedCategoryFilter = filter;
+    this.applyFilter();
+  }
+
+  toggleComposer(): void {
+    this.composerOpen = !this.composerOpen;
+
+    if (!this.composerOpen) {
+      this.resetTaskComposer();
+    }
+  }
+
+  closeComposer(): void {
+    this.composerOpen = false;
+    this.resetTaskComposer();
+    this.editingCategoryId = null;
+    this.editingCategoryName = '';
+  }
+
+  cancelTaskEdit(): void {
+    this.resetTaskComposer();
+  }
+
   trackById(_: number, item: { id: string }): string {
     return item.id;
   }
 
   getCategoryName(categoryId: string): string {
     return this.categories.find((category) => category.id === categoryId)?.name ?? 'Sin categoría';
+  }
+
+  get activeTasks(): Task[] {
+    return this.filteredTasks.filter((task) => !task.completed);
+  }
+
+  get completedTasks(): Task[] {
+    return this.filteredTasks.filter((task) => task.completed);
+  }
+
+  get todayLabel(): string {
+    const now = new Date();
+    return now.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      day: '2-digit',
+      month: 'long',
+    });
+  }
+
+  getCategoryPillClass(categoryId: string): string {
+    const colorMap: Record<string, string> = {
+      general: 'pill-blue',
+      trabajo: 'pill-indigo',
+      casa: 'pill-coral',
+      personal: 'pill-green',
+    };
+
+    const key = this.getCategoryName(categoryId).toLowerCase();
+    return colorMap[key] ?? 'pill-slate';
   }
 
   private applyFilter(): void {
@@ -185,5 +241,12 @@ export class HomePage implements OnInit {
     }
 
     this.filteredTasks = this.tasks.filter((task) => task.categoryId === this.selectedCategoryFilter);
+  }
+
+  private resetTaskComposer(): void {
+    this.editingTaskId = null;
+    this.newTaskTitle = '';
+    this.newTaskCategoryId = this.categories[0]?.id ?? '';
+    this.composerOpen = false;
   }
 }

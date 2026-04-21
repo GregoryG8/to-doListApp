@@ -27,6 +27,14 @@ export class TaskService {
     this.save([task, ...this.tasksSubject.value]);
   }
 
+  updateTask(taskId: string, data: Pick<Task, 'title' | 'categoryId'>): void {
+    const updatedTasks = this.tasksSubject.value.map((task) =>
+      task.id === taskId ? { ...task, title: data.title, categoryId: data.categoryId } : task,
+    );
+
+    this.save(updatedTasks);
+  }
+
   toggleTask(taskId: string): void {
     const updatedTasks = this.tasksSubject.value.map((task) =>
       task.id === taskId ? { ...task, completed: !task.completed } : task,

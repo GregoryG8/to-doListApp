@@ -1,57 +1,246 @@
 .page-shell {
-  --background: linear-gradient(180deg, #eff4ff 0%, #f7f9fc 45%, #ffffff 100%);
+  --background: #f4f5fb;
 }
 
-.hero {
-  padding: 24px 16px 8px;
-  max-width: 960px;
+.screen {
+  padding: 18px 14px 100px;
+  max-width: 480px;
   margin: 0 auto;
 }
 
-.eyebrow {
-  margin: 0 0 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.75rem;
-  color: #5b6b84;
+.hero {
+  padding: 4px 4px 10px;
 }
 
 .hero h1 {
   margin: 0;
   font-size: 2rem;
-  font-weight: 800;
-  color: #14213d;
+  line-height: 1.1;
+  font-weight: 900;
+  color: #1f2635;
 }
 
-.subtitle {
-  margin: 10px 0 0;
-  max-width: 720px;
-  color: #5b6477;
-  line-height: 1.5;
+.date {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  color: #8b92a3;
+  text-transform: capitalize;
 }
 
-.stack-row {
-  margin-bottom: 16px;
+.category-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 2px 12px;
+  scrollbar-width: none;
 }
 
-ion-card {
-  border-radius: 20px;
-  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08);
+.category-row::-webkit-scrollbar {
+  display: none;
 }
 
-.form-item {
-  margin-bottom: 14px;
+.chip {
+  border: 0;
+  border-radius: 999px;
+  background: #e8e9ef;
+  color: #7a8296;
+  padding: 9px 16px;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
-.task-list {
-  margin-top: 12px;
+.chip.active {
+  background: #3378ff;
+  color: #ffffff;
 }
 
-.task-item.done h2 {
-  text-decoration: line-through;
-  color: #7b8497;
+.task-section,
+.completed-block {
+  display: grid;
+  gap: 10px;
+}
+
+.task-card {
+  border-radius: 14px;
+  margin: 0;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
+  border: 1px solid #ebeef5;
+}
+
+.task-card ion-card-content {
+  padding: 14px 12px;
+}
+
+.task-top {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 10px;
+}
+
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.task-main h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: #2a3142;
+  font-weight: 700;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+  font-size: 0.72rem;
+  color: #8d94a5;
+}
+
+.meta-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #c3c8d5;
 }
 
 ion-badge {
-  margin-right: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.6rem;
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+
+.pill-blue {
+  background: #e5edff;
+  color: #316ef7;
+}
+
+.pill-indigo {
+  background: #ece7ff;
+  color: #5b41e5;
+}
+
+.pill-coral {
+  background: #ffe7e8;
+  color: #de4861;
+}
+
+.pill-green {
+  background: #ddfae8;
+  color: #0f9b5f;
+}
+
+.pill-slate {
+  background: #eceff5;
+  color: #667085;
+}
+
+.action-btn {
+  margin: -4px -6px 0 0;
+}
+
+.empty-card {
+  margin: 0;
+  border-radius: 14px;
+  box-shadow: none;
+  border: 1px dashed #cad1de;
+}
+
+.completed-block {
+  margin-top: 26px;
+}
+
+.section-label {
+  margin: 0 2px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  color: #9aa1b2;
+}
+
+.completed .task-main h3 {
+  text-decoration: line-through;
+  color: #8f97a9;
+}
+
+.done-icon {
+  font-size: 1.2rem;
+  color: #70b08b;
+  margin-top: 2px;
+}
+
+.composer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 24, 38, 0.35);
+  z-index: 20;
+}
+
+.composer-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+  padding: 16px 14px 22px;
+  box-shadow: 0 -14px 30px rgba(12, 20, 32, 0.18);
+  z-index: 21;
+  max-height: 78vh;
+  overflow-y: auto;
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.sheet-header h3 {
+  margin: 0;
+  color: #1f2635;
+}
+
+.form-item {
+  margin-bottom: 10px;
+}
+
+.category-admin {
+  margin-top: 14px;
+}
+
+.category-admin h4 {
+  margin: 0 0 8px;
+  color: #4a5264;
+}
+
+.category-list {
+  margin-top: 10px;
+}
+
+.floating-add {
+  position: fixed;
+  right: 18px;
+  bottom: 20px;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: #3378ff;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 10px 24px rgba(51, 120, 255, 0.45);
+  z-index: 22;
 }
