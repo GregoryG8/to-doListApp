@@ -1,27 +1,57 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.page-shell {
+  --background: linear-gradient(180deg, #eff4ff 0%, #f7f9fc 45%, #ffffff 100%);
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.hero {
+  padding: 24px 16px 8px;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  color: #5b6b84;
+}
 
-  color: #8c8c8c;
-
+.hero h1 {
   margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #14213d;
 }
 
-#container a {
-  text-decoration: none;
+.subtitle {
+  margin: 10px 0 0;
+  max-width: 720px;
+  color: #5b6477;
+  line-height: 1.5;
+}
+
+.stack-row {
+  margin-bottom: 16px;
+}
+
+ion-card {
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08);
+}
+
+.form-item {
+  margin-bottom: 14px;
+}
+
+.task-list {
+  margin-top: 12px;
+}
+
+.task-item.done h2 {
+  text-decoration: line-through;
+  color: #7b8497;
+}
+
+ion-badge {
+  margin-right: 8px;
 }

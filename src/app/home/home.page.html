@@ -1,20 +1,145 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>To-Do List</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+<ion-content [fullscreen]="true" class="page-shell">
+  <div class="hero">
+    <p class="eyebrow">Ionic + Angular + Cordova</p>
+    <h1>Lista simple de tareas</h1>
+    <p class="subtitle">Agrega tareas, organiza por categorías, marca completadas y guarda todo en el dispositivo.</p>
   </div>
+
+  <ion-grid fixed>
+    <ion-row class="stack-row">
+      <ion-col size="12" sizeLg="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Nueva tarea</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item fill="outline" class="form-item">
+              <ion-label position="stacked">Título</ion-label>
+              <ion-input [(ngModel)]="newTaskTitle" placeholder="Ej. Comprar pan"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline" class="form-item">
+              <ion-label position="stacked">Categoría</ion-label>
+              <ion-select [(ngModel)]="newTaskCategoryId">
+                <ion-select-option *ngFor="let category of categories; trackBy: trackById" [value]="category.id">
+                  {{ category.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-button expand="block" (click)="addTask()" [disabled]="!newTaskTitle.trim() || !newTaskCategoryId">
+              <ion-icon slot="start" name="add"></ion-icon>
+              Agregar tarea
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" sizeLg="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Nueva categoría</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item fill="outline" class="form-item">
+              <ion-label position="stacked">Nombre</ion-label>
+              <ion-input [(ngModel)]="newCategoryName" placeholder="Ej. Casa"></ion-input>
+            </ion-item>
+
+            <ion-button expand="block" (click)="addCategory()" [disabled]="!newCategoryName.trim()">
+              <ion-icon slot="start" name="add"></ion-icon>
+              Agregar categoría
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="stack-row">
+      <ion-col size="12" sizeLg="7">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Tareas</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item fill="outline" class="form-item">
+              <ion-label position="stacked">Filtrar por categoría</ion-label>
+              <ion-select [(ngModel)]="selectedCategoryFilter" (ionChange)="onCategoryFilterChange()">
+                <ion-select-option value="all">Todas</ion-select-option>
+                <ion-select-option *ngFor="let category of categories; trackBy: trackById" [value]="category.id">
+                  {{ category.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-list lines="none" class="task-list">
+              <ion-item *ngFor="let task of filteredTasks; trackBy: trackById" class="task-item" [class.done]="task.completed">
+                <ion-checkbox slot="start" [checked]="task.completed" (ionChange)="toggleTask(task)"></ion-checkbox>
+
+                <ion-label>
+                  <h2>{{ task.title }}</h2>
+                  <p>{{ getCategoryName(task.categoryId) }}</p>
+                </ion-label>
+
+                <ion-badge slot="end" [color]="task.completed ? 'success' : 'medium'">
+                  {{ task.completed ? 'Hecha' : 'Pendiente' }}
+                </ion-badge>
+
+                <ion-button fill="clear" color="danger" slot="end" (click)="removeTask(task.id)">
+                  <ion-icon slot="icon-only" name="trash"></ion-icon>
+                </ion-button>
+              </ion-item>
+
+              <ion-item *ngIf="filteredTasks.length === 0" lines="none">
+                <ion-text color="medium">No hay tareas para mostrar.</ion-text>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" sizeLg="5">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Categorías</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list lines="full">
+              <ion-item *ngFor="let category of categories; trackBy: trackById">
+                <ng-container *ngIf="editingCategoryId === category.id; else viewCategory">
+                  <ion-input [(ngModel)]="editingCategoryName"></ion-input>
+                </ng-container>
+
+                <ng-template #viewCategory>
+                  <ion-label>{{ category.name }}</ion-label>
+                </ng-template>
+
+                <ion-button *ngIf="editingCategoryId === category.id" fill="clear" slot="end" (click)="saveCategory()">
+                  <ion-icon slot="icon-only" name="add"></ion-icon>
+                </ion-button>
+
+                <ion-button *ngIf="editingCategoryId === category.id" fill="clear" color="medium" slot="end" (click)="cancelEditCategory()">
+                  <ion-icon slot="icon-only" name="close"></ion-icon>
+                </ion-button>
+
+                <ion-button *ngIf="editingCategoryId !== category.id" fill="clear" slot="end" (click)="startEditCategory(category)">
+                  <ion-icon slot="icon-only" name="create"></ion-icon>
+                </ion-button>
+
+                <ion-button fill="clear" color="danger" slot="end" (click)="removeCategory(category.id)">
+                  <ion-icon slot="icon-only" name="trash"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
