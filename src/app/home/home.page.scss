@@ -66,10 +66,19 @@
   margin: 0;
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
   border: 1px solid #ebeef5;
+  background: #ffffff;
 }
 
 .task-card ion-card-content {
   padding: 14px 12px;
+}
+
+.checkbox-card {
+  --background: transparent;
+  --border-color: #c3c8d5;
+  --border-radius: 6px;
+  --width: 20px;
+  --height: 20px;
 }
 
 .task-top {

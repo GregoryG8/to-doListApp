@@ -27,32 +27,55 @@
     </div>
 
     <section class="task-section">
-      <ion-card class="task-card" *ngFor="let task of activeTasks; trackBy: trackById">
+      <ion-card
+        class="task-card"
+        *ngFor="let task of activeTasks; trackBy: trackById"
+      >
         <ion-card-content>
           <div class="task-top">
-            <ion-checkbox [checked]="task.completed" (ionChange)="toggleTask(task)"></ion-checkbox>
+            <ion-checkbox
+              class="checkbox-card"
+              [checked]="task.completed"
+              (ionChange)="toggleTask(task)"
+            ></ion-checkbox>
             <div class="task-main">
               <h3>{{ task.title }}</h3>
               <div class="task-meta">
-                <ion-badge [class]="getCategoryPillClass(task.categoryId)">{{ getCategoryName(task.categoryId) }}</ion-badge>
+                <ion-badge [class]="getCategoryPillClass(task.categoryId)"
+                  >{{ getCategoryName(task.categoryId) }}</ion-badge
+                >
                 <span class="meta-dot"></span>
                 <span>Hoy</span>
               </div>
             </div>
-            <ion-button fill="clear" class="action-btn" color="medium" (click)="editTask(task)">
-              <ion-icon slot="icon-only" name="create"></ion-icon>
-            </ion-button>
+            <div>
+              <ion-button
+                fill="clear"
+                class="action-btn"
+                color="medium"
+                (click)="editTask(task)"
+              >
+                <ion-icon slot="icon-only" name="create"></ion-icon>
+              </ion-button>
 
-            <ion-button fill="clear" class="action-btn" color="danger" (click)="removeTask(task.id)">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-button>
+              <ion-button
+                fill="clear"
+                class="action-btn"
+                color="danger"
+                (click)="removeTask(task.id)"
+              >
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-button>
+            </div>
           </div>
         </ion-card-content>
       </ion-card>
 
       <ion-card class="empty-card" *ngIf="activeTasks.length === 0">
         <ion-card-content>
-          <ion-text color="medium">No hay tareas activas en este filtro.</ion-text>
+          <ion-text color="medium"
+            >No hay tareas activas en este filtro.</ion-text
+          >
         </ion-card-content>
       </ion-card>
     </section>
@@ -60,21 +83,36 @@
     <section class="completed-block">
       <p class="section-label">Tareas completadas</p>
 
-      <ion-card class="task-card completed" *ngFor="let task of completedTasks; trackBy: trackById">
+      <ion-card
+        class="task-card completed"
+        *ngFor="let task of completedTasks; trackBy: trackById"
+      >
         <ion-card-content>
           <div class="task-top">
             <ion-icon name="checkmark-circle" class="done-icon"></ion-icon>
             <div class="task-main">
               <h3>{{ task.title }}</h3>
               <div class="task-meta">
-                <ion-badge [class]="getCategoryPillClass(task.categoryId)">{{ getCategoryName(task.categoryId) }}</ion-badge>
+                <ion-badge [class]="getCategoryPillClass(task.categoryId)"
+                  >{{ getCategoryName(task.categoryId) }}</ion-badge
+                >
               </div>
             </div>
-            <ion-button fill="clear" class="action-btn" color="medium" (click)="editTask(task)">
+            <ion-button
+              fill="clear"
+              class="action-btn"
+              color="medium"
+              (click)="editTask(task)"
+            >
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-button>
 
-            <ion-button fill="clear" class="action-btn" color="danger" (click)="removeTask(task.id)">
+            <ion-button
+              fill="clear"
+              class="action-btn"
+              color="danger"
+              (click)="removeTask(task.id)"
+            >
               <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
           </div>
@@ -87,7 +125,11 @@
     </section>
   </div>
 
-  <div class="composer-backdrop" *ngIf="composerOpen" (click)="closeComposer()"></div>
+  <div
+    class="composer-backdrop"
+    *ngIf="composerOpen"
+    (click)="closeComposer()"
+  ></div>
 
   <div class="composer-sheet" *ngIf="composerOpen">
     <div class="sheet-header">
@@ -99,24 +141,40 @@
 
     <ion-item fill="outline" class="form-item">
       <ion-label position="stacked">Título</ion-label>
-      <ion-input [(ngModel)]="newTaskTitle" placeholder="Ej. Finalizar informe"></ion-input>
+      <ion-input
+        [(ngModel)]="newTaskTitle"
+        placeholder="Ej. Finalizar informe"
+      ></ion-input>
     </ion-item>
 
     <ion-item fill="outline" class="form-item">
       <ion-label position="stacked">Categoría</ion-label>
       <ion-select [(ngModel)]="newTaskCategoryId">
-        <ion-select-option *ngFor="let category of categories; trackBy: trackById" [value]="category.id">
+        <ion-select-option
+          *ngFor="let category of categories; trackBy: trackById"
+          [value]="category.id"
+        >
           {{ category.name }}
         </ion-select-option>
       </ion-select>
     </ion-item>
 
-    <ion-button expand="block" (click)="saveTask()" [disabled]="!newTaskTitle.trim() || !newTaskCategoryId">
+    <ion-button
+      expand="block"
+      (click)="saveTask()"
+      [disabled]="!newTaskTitle.trim() || !newTaskCategoryId"
+    >
       <ion-icon slot="start" name="add"></ion-icon>
       {{ editingTaskId ? 'Guardar cambios' : 'Agregar tarea' }}
     </ion-button>
 
-    <ion-button *ngIf="editingTaskId" expand="block" fill="clear" color="medium" (click)="cancelTaskEdit()">
+    <ion-button
+      *ngIf="editingTaskId"
+      expand="block"
+      fill="clear"
+      color="medium"
+      (click)="cancelTaskEdit()"
+    >
       Cancelar edición
     </ion-button>
 
@@ -125,16 +183,26 @@
 
       <ion-item fill="outline" class="form-item">
         <ion-label position="stacked">Nueva categoría</ion-label>
-        <ion-input [(ngModel)]="newCategoryName" placeholder="Ej. Personal"></ion-input>
+        <ion-input
+          [(ngModel)]="newCategoryName"
+          placeholder="Ej. Personal"
+        ></ion-input>
       </ion-item>
 
-      <ion-button expand="block" fill="outline" (click)="addCategory()" [disabled]="!newCategoryName.trim()">
+      <ion-button
+        expand="block"
+        fill="outline"
+        (click)="addCategory()"
+        [disabled]="!newCategoryName.trim()"
+      >
         Agregar categoría
       </ion-button>
 
       <ion-list lines="none" class="category-list">
         <ion-item *ngFor="let category of categories; trackBy: trackById">
-          <ng-container *ngIf="editingCategoryId === category.id; else showCategory">
+          <ng-container
+            *ngIf="editingCategoryId === category.id; else showCategory"
+          >
             <ion-input [(ngModel)]="editingCategoryName"></ion-input>
           </ng-container>
 
@@ -142,19 +210,36 @@
             <ion-label>{{ category.name }}</ion-label>
           </ng-template>
 
-          <ion-button *ngIf="editingCategoryId === category.id" fill="clear" (click)="saveCategory()">
+          <ion-button
+            *ngIf="editingCategoryId === category.id"
+            fill="clear"
+            (click)="saveCategory()"
+          >
             <ion-icon slot="icon-only" name="add"></ion-icon>
           </ion-button>
 
-          <ion-button *ngIf="editingCategoryId === category.id" fill="clear" color="medium" (click)="cancelEditCategory()">
+          <ion-button
+            *ngIf="editingCategoryId === category.id"
+            fill="clear"
+            color="medium"
+            (click)="cancelEditCategory()"
+          >
             <ion-icon slot="icon-only" name="close"></ion-icon>
           </ion-button>
 
-          <ion-button *ngIf="editingCategoryId !== category.id" fill="clear" (click)="startEditCategory(category)">
+          <ion-button
+            *ngIf="editingCategoryId !== category.id"
+            fill="clear"
+            (click)="startEditCategory(category)"
+          >
             <ion-icon slot="icon-only" name="create"></ion-icon>
           </ion-button>
 
-          <ion-button fill="clear" color="danger" (click)="removeCategory(category.id)">
+          <ion-button
+            fill="clear"
+            color="danger"
+            (click)="removeCategory(category.id)"
+          >
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-item>
